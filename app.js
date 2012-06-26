@@ -1,7 +1,7 @@
 // Dependencies
 var express = require('express'),
 	stylus = require('stylus'),
-	redis = require('redis'),
+	redis = require('redis-url').connect(process.env.REDISTOGO_URL),
 	http = require('http');
 
 // Create app
@@ -10,7 +10,7 @@ var application_root = __dirname,
 
 app = express();
 app.configure(function() {
-	app.db = redis.createClient();
+	app.db = redis;
 	app.set('views', application_root + '/views');
 	app.set('view engine', 'jade');
 	app.set('root', application_root);
