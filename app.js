@@ -1,8 +1,14 @@
 // Dependencies
 var express = require('express'),
 	stylus = require('stylus'),
-	redis = require('redis-url').connect(process.env.REDISTOGO_URL),
 	http = require('http');
+
+// Database setup
+var pg = require('pg'),
+    connectionString = process.env.DATABASE_URL || 'postgres://leo:qcskZa6QGs@localhost:5432/urls',
+    client = new pg.Client(connectionString);
+
+client.connect();
 
 // Create app
 var application_root = __dirname,
@@ -10,7 +16,7 @@ var application_root = __dirname,
 
 app = express();
 app.configure(function() {
-	app.db = redis;
+	app.db = client;
 	app.set('views', application_root + '/views');
 	app.set('view engine', 'jade');
 	app.set('root', application_root);

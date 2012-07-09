@@ -30,13 +30,16 @@ app.get('/', function(req, res, next) {
  * GET all urls
  */
 app.get('/u', function(req, res, next) {
-	var from = 0,
-		to = -1;
+	var query = db.query("SELECT * FROM urls"),
+		reply = {};
 
-	db.zrange('urlsaver:urls', from, to, "withscores", function(err, reply) {
-		if (err) return next(err);
-		
-		res.render('urls', { urls: dateConvert(reply) });
+	query.on('row', function(row) {
+		reply[row.time_created] = row.url;
+	});
+
+	query.on('end', function() {
+		res.render('urls', { urls: reply });
+		db.end();
 	});
 });
 
