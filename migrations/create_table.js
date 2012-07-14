@@ -1,5 +1,5 @@
 var pg = require('pg').native,
-    connectionString = process.env.DATABASE_URL || 'postgres://leo:qcskZa6QGs@localhost:5432/urls',
+    connectionString = 'postgres://kngmgenohqhrfp:JCd9LQ5i23CI7RyTPc99GJngWX@ec2-23-23-237-0.compute-1.amazonaws.com:5432/daaqpbj47dgjpf',
     client,
     query;
 
