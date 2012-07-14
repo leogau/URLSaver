@@ -2,7 +2,4 @@ extends layout
 
 block content
 	each url, key in urls
-		li #{key}: 
-			:markdown
-				[#{url}](#{url})
-				
+		<li>#{key}: <a href="#{url}">#{url}</a></li>				
