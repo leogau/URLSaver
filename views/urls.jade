@@ -3,5 +3,6 @@ extends layout
 block content
 	each url, key in urls
 		li #{key}: 
-			a(href="#{url}")
-				#{url}
+			:markdown
+				[#{url}](#{url})
+				
