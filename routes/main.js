@@ -52,7 +52,9 @@ app.get('/:url(*)', function(req, res, next) {
 
 	var id = utils.md5(url);
 
-	if (url !== 'http://humans.txt' || url !== 'favicon.ico') app.emit('url', url, id);
+	if (url !== 'http://humans.txt' || url !== 'http://favicon.ico') {
+		app.emit('url', url, id);
+	}
 
 	res.render('saved');
 });
