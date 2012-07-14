@@ -8,7 +8,11 @@ var pg = require('pg'),
     connectionString = process.env.DATABASE_URL || 'postgres://leo:qcskZa6QGs@localhost:5432/urls',
     client = new pg.Client(connectionString);
 
+// create db - to remove
+var psql = 'CREATE TABLE urls (  urls_id serial NOT NULL,  time_created timestamp with time zone NOT NULL,  url text NOT NULL,  CONSTRAINT "Primary Key" PRIMARY KEY (urls_id))';
 client.connect();
+var query = client.query(psql);
+query.on('end', function() { client.end(); });
 
 // Create app
 var application_root = __dirname,
