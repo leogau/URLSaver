@@ -2,24 +2,6 @@ var utils = require('../lib/utils'),
 	db = app.db;
 
 /*
- * Convert milliseconds to correct dates
- * an return as an object.
- *
- * Expecting array with format: [url, int, ...]
- */
-var dateConvert = function(arr) {
-	var obj = {};
-	arr.forEach(function(elem, idx, array) {
-		if (idx % 2 === 1) {
-			var d = new Date(parseInt(elem, 10));
-			obj[d.toDateString()] = array[idx-1];
-		}
-	});
-	console.log(obj);
-	return obj;
-};
-
-/*
  * GET home page
  */
 app.get('/', function(req, res, next) {
@@ -34,7 +16,9 @@ app.get('/u', function(req, res, next) {
 		reply = {};
 
 	query.on('row', function(row) {
-		reply[row.time_created] = row.url;
+		// convert to local time
+		var t = new Date(row.time_created + "UTC");
+		reply[t] = row.url;
 	});
 
 	query.on('end', function() {
