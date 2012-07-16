@@ -1,5 +1,8 @@
 extends layout
 
+block header
+	<a href="/logout">Log out</a>
+
 block content
 	each url, key in urls
 		<li>#{key}: <a href="#{url}">#{url}</a></li>				
