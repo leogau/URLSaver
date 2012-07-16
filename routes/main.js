@@ -1,6 +1,16 @@
 var utils = require('../lib/utils'),
 	db = app.db;
 
+// Simple route middleware to ensure user is authenticated.
+//   Use this route middleware on any resource that needs to be protected.  If
+//   the request is authenticated (typically via a persistent login session),
+//   the request will proceed.  Otherwise, the user will be redirected to the
+//   login page.
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  res.redirect('/')
+}
+
 /*
  * GET home page
  */
@@ -8,10 +18,33 @@ app.get('/', function(req, res, next) {
 	res.render('index');
 });
 
+// Redirect the user to Google for authentication.  When complete, Google
+// will redirect the user back to the application at
+// /auth/google/return
+app.get('/auth/google',
+	passport.authenticate('google', { failureRedirect: '/' }),
+	function(req, res) {
+	res.redirect('/u');
+});
+
+// Google will redirect the user to this URL after authentication.  Finish
+// the process by verifying the assertion.  If valid, the user will be
+// logged in.  Otherwise, authentication has failed.
+app.get('/auth/google/return', 
+  passport.authenticate('google', { failureRedirect: '/' }),
+  function(req, res) {
+  	res.redirect('/u');
+});
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
+
 /*
  * GET all urls
  */
-app.get('/u', function(req, res, next) {
+app.get('/u', ensureAuthenticated, function(req, res, next) {
 	var query = db.query("SELECT * FROM urls"),
 		reply = {};
 
@@ -22,7 +55,7 @@ app.get('/u', function(req, res, next) {
 	});
 
 	query.on('end', function() {
-		res.render('urls', { urls: reply });
+		res.render('urls', { urls: reply, user: req.user });
 		db.end();
 	});
 });
